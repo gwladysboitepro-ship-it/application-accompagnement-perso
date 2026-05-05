@@ -1,0 +1,56 @@
+{
+  "expo": {
+    "name": "VITA",
+    "slug": "vita",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "vita",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#131F24"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.vita.app"
+    },
+    "android": {
+      "package": "com.vita.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#131F24"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-camera",
+        { "cameraPermission": "VITA a besoin de votre caméra pour analyser vos repas." }
+      ],
+      [
+        "expo-image-picker",
+        { "photosPermission": "VITA accède à vos photos pour analyser vos repas." }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#58CC02"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
