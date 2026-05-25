@@ -15,7 +15,12 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.vita.app"
+      "bundleIdentifier": "com.vita.app",
+      "usesAppleSignIn": true,
+      "infoPlist": {
+        "NSHealthShareUsageDescription": "VITA lit vos données de santé pour personnaliser votre programme.",
+        "NSHealthUpdateUsageDescription": "VITA enregistre vos activités dans Santé."
+      }
     },
     "android": {
       "package": "com.vita.app",
@@ -33,6 +38,7 @@
     "plugins": [
       "expo-router",
       "expo-font",
+      "expo-apple-authentication",
       [
         "expo-camera",
         { "cameraPermission": "VITA a besoin de votre caméra pour analyser vos repas." }

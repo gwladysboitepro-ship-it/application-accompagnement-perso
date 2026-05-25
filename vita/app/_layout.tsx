@@ -51,6 +51,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="lesson/[type]" options={{ presentation: 'card', animation: 'slide_from_right' }} />
         <Stack.Screen name="celebration" options={{ presentation: 'modal', animation: 'fade' }} />
+        <Stack.Screen name="legal" options={{ presentation: 'card', animation: 'slide_from_right' }} />
       </Stack>
     </GestureHandlerRootView>
   );

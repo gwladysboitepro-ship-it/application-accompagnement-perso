@@ -1,6 +1,8 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
+import { router } from 'expo-router';
 import { useUserStore, getLevelTitle, getNextLevelXp } from '../../lib/store/useUser';
+import { PremiumModal } from '../../components/premium/PremiumModal';
 import { ProgressBar } from '../../components/ui/ProgressBar';
 import { Button } from '../../components/ui/Button';
 import { Colors, Spacing, Radius } from '../../constants/theme';
@@ -20,6 +22,7 @@ const ALL_BADGES = [
 export default function ProfileScreen() {
   const user = useUserStore((s) => s.user);
   const logout = useUserStore((s) => s.logout);
+  const [showPremium, setShowPremium] = useState(false);
 
   if (!user) return null;
 
@@ -102,19 +105,55 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      {/* Premium */}
+      {/* Premium banner — ✅ Guideline 2.3.2 : paid features clearly labelled */}
       {!user.isPremium && (
         <View style={styles.premiumBanner}>
           <Text style={styles.premiumEmoji}>💎</Text>
-          <Text style={styles.premiumTitle}>Passe Premium</Text>
-          <Text style={styles.premiumSubtitle}>Photos illimitées · Coach IA illimité · Streak freeze</Text>
-          <Button label="Essai gratuit 7 jours →" onPress={() => {}} variant="gold" />
-          <Text style={styles.premiumPrice}>4,99€/mois · Sans engagement</Text>
+          <Text style={styles.premiumTitle}>VITA Premium — Achat requis</Text>
+          <Text style={styles.premiumSubtitle}>
+            Les fonctionnalités suivantes nécessitent un abonnement payant :{'\n'}
+            Photos illimitées · Coach IA illimité · Streak Freeze · Quiz IA · Sommeil avancé
+          </Text>
+          {/* ✅ APPLE RULE: billed amount most prominent */}
+          <View style={styles.pricingBlock}>
+            <View style={styles.pricingRow}>
+              <Text style={styles.pricingLabel}>Annuel (meilleure offre)</Text>
+              <Text style={styles.pricingAmount}>35,88 € / an</Text>
+            </View>
+            <Text style={styles.pricingPerMonth}>soit 2,99 € / mois</Text>
+            <View style={[styles.pricingRow, { marginTop: 8 }]}>
+              <Text style={styles.pricingLabel}>Mensuel</Text>
+              <Text style={styles.pricingAmount}>4,99 € / mois</Text>
+            </View>
+            <Text style={styles.pricingTrial}>7 jours d'essai gratuit inclus</Text>
+          </View>
+          <Button
+            label="Voir les offres Premium"
+            onPress={() => setShowPremium(true)}
+            variant="gold"
+          />
         </View>
       )}
 
+      {/* Legal links — ✅ Required by Apple */}
+      <View style={styles.legalRow}>
+        <TouchableOpacity onPress={() => router.push('/legal/privacy')}>
+          <Text style={styles.legalLink}>Politique de confidentialité</Text>
+        </TouchableOpacity>
+        <Text style={styles.legalSep}>·</Text>
+        <TouchableOpacity onPress={() => router.push('/legal/terms')}>
+          <Text style={styles.legalLink}>CGU & EULA</Text>
+        </TouchableOpacity>
+      </View>
+
       {/* Déconnexion */}
       <Button label="Se déconnecter" onPress={logout} variant="ghost" />
+
+      {/* Premium Modal */}
+      <PremiumModal
+        visible={showPremium}
+        onClose={() => setShowPremium(false)}
+      />
     </ScrollView>
   );
 }
@@ -234,7 +273,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.gold + '44',
   },
   premiumEmoji: { fontSize: 36 },
-  premiumTitle: { fontSize: 22, fontFamily: 'Fraunces-Black', color: Colors.gold },
+  premiumTitle: { fontSize: 20, fontFamily: 'Fraunces-Black', color: Colors.gold },
   premiumSubtitle: {
     fontSize: 13,
     fontFamily: 'Nunito-Bold',
@@ -242,5 +281,27 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 20,
   },
-  premiumPrice: { fontSize: 12, fontFamily: 'Nunito-SemiBold', color: Colors.textMuted },
+  // ✅ Pricing block — billed amount most prominent per Apple 3.1.2(c)
+  pricingBlock: {
+    width: '100%',
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.md,
+    padding: Spacing.md,
+    gap: 4,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  pricingRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  pricingLabel: { fontFamily: 'Nunito-SemiBold', fontSize: 13, color: Colors.textSecondary },
+  pricingAmount: { fontFamily: 'Fraunces-Black', fontSize: 18, color: Colors.textPrimary },
+  pricingPerMonth: { fontFamily: 'Nunito-SemiBold', fontSize: 11, color: Colors.textMuted, textAlign: 'right' },
+  pricingTrial: { fontFamily: 'Nunito-Bold', fontSize: 12, color: Colors.green, marginTop: 4 },
+  legalRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: Spacing.sm,
+  },
+  legalLink: { fontFamily: 'Nunito-Bold', fontSize: 12, color: Colors.textMuted, textDecorationLine: 'underline' },
+  legalSep: { color: Colors.textMuted, fontSize: 12 },
 });
